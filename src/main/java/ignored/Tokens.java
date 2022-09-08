@@ -1,4 +1,4 @@
-package me.chasemartinez;
+package ignored;
 
 public class Tokens {
 
