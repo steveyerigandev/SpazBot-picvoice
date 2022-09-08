@@ -1,6 +1,4 @@
-package me.chasemartinez;
-
-import ignored.Tokens;
+package bot.spaz;
 
 import javax.security.auth.login.LoginException;
 
