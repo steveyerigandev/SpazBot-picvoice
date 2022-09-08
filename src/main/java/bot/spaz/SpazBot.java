@@ -24,9 +24,9 @@ public class SpazBot extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        System.out.println("testing");
-        String messageSent = event.getMessage().getContentStripped();
-        if (event.getChannel().toString().equals("spaz-bot-testing-ground")) {
+        String messageSent = event.getMessage().getContentRaw();
+
+        if (!event.getAuthor().isBot()) {
             event.getChannel().sendMessage("You said: " + messageSent).queue();
         }
     }
