@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 public class SpazBotListeners extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+
         if (!event.getAuthor().isBot()) {
             String botCommand = event.getMessage().getContentRaw().substring(0, 5);
             System.out.println(botCommand);
