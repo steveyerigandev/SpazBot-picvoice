@@ -12,8 +12,8 @@ public class SpazBot {
 
         String token = new Token().getToken();
 
-        JDA bot = JDABuilder.createDefault(token)
-                .setActivity(Activity.playing("with your mom"))
+        JDA spazBot = JDABuilder.createDefault(token)
+                .setActivity(Activity.playing("the dangerous game of figuring out how to code a bot"))
                 .addEventListeners(new SpazBotListeners())
                 .build();
     }

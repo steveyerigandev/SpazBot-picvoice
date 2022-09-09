@@ -8,8 +8,11 @@ public class SpazBotListeners extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (!event.getAuthor().isBot()) {
-            String messageSent = event.getMessage().getContentRaw();
-            event.getChannel().sendMessage("You said: " + messageSent).queue();
+            String botCommand = event.getMessage().getContentRaw().substring(0, 4);
+            if(botCommand.equals("!spaz")){
+                String messageSent = event.getMessage().getContentRaw();
+                event.getChannel().sendMessage("You said: " + messageSent).queue();
+            }
         }
     }
 }
