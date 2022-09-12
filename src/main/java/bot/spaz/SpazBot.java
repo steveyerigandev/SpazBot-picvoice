@@ -11,10 +11,10 @@ public class SpazBot {
 
     public static void main(String[] args) throws LoginException {
 
-        String token = new Token().getToken();
+        JDABuilder builder =
+        JDABuilder.createDefault(new Token().getToken());
 
-        JDA spazBot = JDABuilder.createDefault(token)
-                .setActivity(Activity.playing("the dangerous game of figuring out how to code a bot"))
+                builder.setActivity(Activity.playing("the dangerous game of figuring out how to code a bot"))  // sets default bot activity
                 .addEventListeners(new SpazBotListeners())
                 .build();
     }
