@@ -1,0 +1,48 @@
+Language model created by QuickLM on Tue Sep 13 18:09:29 EDT 2022
+Copyright (c) 1996-2010 Carnegie Mellon University and Alexander I. Rudnicky
+
+The model is in standard ARPA format, designed by Doug Paul while he was at MITRE.
+
+The code that was used to produce this language model is available in Open Source.
+Please visit http://www.speech.cs.cmu.edu/tools/ for more information
+
+The (fixed) discount mass is 0.5. The backoffs are computed using the ratio method.
+This model based on a corpus of 4 sentences and 8 words
+
+\data\
+ngram 1=8
+ngram 2=10
+ngram 3=7
+
+\1-grams:
+-0.9031 </s> -0.3010
+-0.9031 <s> -0.2430
+-1.2041 BOT -0.2730
+-1.5051 BRUH -0.2430
+-1.5051 GOTTEM -0.2430
+-1.5051 LEAVE -0.2430
+-1.5051 SAY -0.2430
+-1.2041 SPAZ -0.2730
+
+\2-grams:
+-0.9031 <s> BRUH 0.0000
+-0.9031 <s> GOTTEM 0.0000
+-0.6021 <s> SPAZ 0.0000
+-0.6021 BOT LEAVE 0.0000
+-0.6021 BOT SAY 0.0000
+-0.3010 BRUH </s> -0.3010
+-0.3010 GOTTEM </s> -0.3010
+-0.3010 LEAVE </s> -0.3010
+-0.3010 SAY </s> -0.3010
+-0.3010 SPAZ BOT 0.0000
+
+\3-grams:
+-0.3010 <s> BRUH </s>
+-0.3010 <s> GOTTEM </s>
+-0.3010 <s> SPAZ BOT
+-0.3010 BOT LEAVE </s>
+-0.3010 BOT SAY </s>
+-0.6021 SPAZ BOT LEAVE
+-0.6021 SPAZ BOT SAY
+
+\end\

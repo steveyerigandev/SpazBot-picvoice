@@ -14,14 +14,15 @@ public class SpazBot {
 
         Configuration sphinxConfig = new Configuration();
         sphinxConfig.setAcousticModelPath("resource:/edu/cmu/sphinx/models/en-us/en-us");
-        sphinxConfig.setDictionaryPath("");
-        sphinxConfig.setLanguageModelPath("");
+        sphinxConfig.setDictionaryPath("src\\main\\resources\\3678.dic");
+        sphinxConfig.setLanguageModelPath("src\\main\\resources\\3678.lm");
 
         JDABuilder spazBot =
                 JDABuilder.createDefault(new Token().getToken());
+
         spazBot.setActivity(Activity.playing("the dangerous game of figuring out how to code a bot"))  // sets default bot activity
                 .addEventListeners(new SpazBotListeners())
-                .enableIntents(GatewayIntent.MESSAGE_CONTENT)
+                .enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES)
                 .build();
     }
 }

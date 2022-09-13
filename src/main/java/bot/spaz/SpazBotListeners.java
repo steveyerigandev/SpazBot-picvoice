@@ -1,9 +1,12 @@
 package bot.spaz;
 
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.guild.voice.GenericGuildVoiceEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceRequestToSpeakEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
+import net.dv8tion.jda.api.utils.data.DataObject;
 import org.jetbrains.annotations.NotNull;
 
 public class SpazBotListeners extends ListenerAdapter {
@@ -30,5 +33,10 @@ public class SpazBotListeners extends ListenerAdapter {
             AudioManager audioManager = guild.getAudioManager();
             audioManager.closeAudioConnection();
         }
+    }
+
+    @Override
+    public void onGuildVoiceRequestToSpeak(@NotNull GuildVoiceRequestToSpeakEvent event) {
+        // How to implement voice activity, speech too incorporate it with Sphinx
     }
 }

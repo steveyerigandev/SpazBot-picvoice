@@ -1,0 +1,2 @@
+For generating speech knowledge base with the commands file
+http://www.speech.cs.cmu.edu/tools/lmtool-new.html
