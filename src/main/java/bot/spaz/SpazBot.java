@@ -1,5 +1,6 @@
 package bot.spaz;
 
+import edu.cmu.sphinx.api.Configuration;
 import ignored.Token;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -10,6 +11,11 @@ import javax.security.auth.login.LoginException;
 public class SpazBot {
 
     public static void main(String[] args) throws LoginException {
+
+        Configuration sphinxConfig = new Configuration();
+        sphinxConfig.setAcousticModelPath("resource:/edu/cmu/sphinx/models/en-us/en-us");
+        sphinxConfig.setDictionaryPath("");
+        sphinxConfig.setLanguageModelPath("");
 
         JDABuilder spazBot =
                 JDABuilder.createDefault(new Token().getToken());
