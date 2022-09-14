@@ -76,7 +76,7 @@ public class SpazBot extends ListenerAdapter {
         audioManager.openAudioConnection(channel);
     }
 
-    public class AudioHandler implements AudioReceiveHandler, AudioSendHandler {
+    public static class AudioHandler implements AudioSendHandler, AudioReceiveHandler {
 
         private final Queue<byte[]> queue = new ConcurrentLinkedQueue<>();
 
@@ -86,10 +86,8 @@ public class SpazBot extends ListenerAdapter {
         }
 
         @Override
-        public void handleCombinedAudio(@NotNull CombinedAudio combinedAudio) {
-            if (combinedAudio.getUsers().isEmpty()) {
-                return;
-            }
+        public void handleCombinedAudio(CombinedAudio combinedAudio) {
+            if (combinedAudio.getUsers().isEmpty()) return;
             byte[] data = combinedAudio.getAudioData(1.0f); // 1.0 sets volume to 100%
             queue.add(data);
         }
