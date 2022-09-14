@@ -25,7 +25,7 @@ public class VoicePacket {
         int length = (packet != null ? packet.length : toAdd.length);
         if (length >= 576000) {
             try {
-                getResult(SpazBot.recognizer);
+                getResult(SpazListener.recognizer);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -48,8 +48,8 @@ public class VoicePacket {
 
         try {
 
-            AudioSystem.write(AIS, AudioFileFormat.Type.WAVE, new File("tmp/" + user.getId() + ".wav"));
-            InputStream stream = new FileInputStream("tmp/" + user.getId() + ".wav");
+            AudioSystem.write(AIS, AudioFileFormat.Type.WAVE, new File("src/main/resources/tmp/" + user.getId() + ".wav"));
+            InputStream stream = new FileInputStream("src/main/resources/tmp/" + user.getId() + ".wav");
 
             byte[] isArray = new byte[AIS.available()];
             byte[] streamArray = new byte[stream.available()];
@@ -57,12 +57,11 @@ public class VoicePacket {
             stream.read(streamArray);
             AIS.read(isArray);
             stream.close();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        InputStream stream = new FileInputStream("tmp/" + user.getId() + ".wav");
+        InputStream stream = new FileInputStream("src/main/resources/tmp/" + user.getId() + ".wav");
         try {
             stream = new ByteArrayInputStream(packet);
         } catch (Exception e) {
@@ -71,8 +70,10 @@ public class VoicePacket {
 
         recognizer.startRecognition(stream);
         SpeechResult result;
-        while((result = recognizer.getResult()) != null){
+
+        while ((result = recognizer.getResult()) != null) {
             System.out.format("Hypothesis: %s\n", result.getHypothesis());
+            System.out.println(result.getWords());
         }
         recognizer.stopRecognition();
     }
