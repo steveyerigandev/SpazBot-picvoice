@@ -40,7 +40,7 @@ public class SpazListener extends ListenerAdapter {
 
         if (message.getContentRaw().startsWith("-join")) {
             VoiceChannel voiceChannel = (VoiceChannel) message.getMember().getVoiceState().getChannel();
-            AudioManager audioManager = guild.getAudioManager();
+//            AudioManager audioManager = guild.getAudioManager();
 
             // sphinx voice recognition configuration, acoustic model, vocab dictionary, pronunciation
             Configuration configuration = new Configuration();
@@ -58,7 +58,7 @@ public class SpazListener extends ListenerAdapter {
             }
 
             try {
-                audioManager.openAudioConnection(voiceChannel);
+                voiceChannel.getGuild().getAudioManager().openAudioConnection(voiceChannel);
             } catch (Exception e) {
                 System.out.println("Error connecting to channel " + e.getMessage());
             }

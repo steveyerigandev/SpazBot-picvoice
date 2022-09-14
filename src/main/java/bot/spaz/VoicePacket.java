@@ -23,7 +23,7 @@ public class VoicePacket {
 
     public void addToPacket(byte[] toAdd) {
         int length = (packet != null ? packet.length : toAdd.length);
-        if (length >= 576000) {
+        if (length <= 576000) {
             try {
                 getResult(SpazListener.recognizer);
             } catch (Exception e) {
@@ -73,7 +73,6 @@ public class VoicePacket {
 
         while ((result = recognizer.getResult()) != null) {
             System.out.format("Hypothesis: %s\n", result.getHypothesis());
-            System.out.println(result.getWords());
         }
         recognizer.stopRecognition();
     }
