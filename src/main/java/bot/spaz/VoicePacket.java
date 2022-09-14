@@ -23,7 +23,7 @@ public class VoicePacket {
 
     public void addToPacket(byte[] toAdd) {
         int length = (packet != null ? packet.length : toAdd.length);
-        if (length <= 576000) {
+        if (length >= 576000) {
             try {
                 getResult(SpazListener.recognizer);
             } catch (Exception e) {
