@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.managers.AudioManager;
 
 public class SpazTextListener extends ListenerAdapter {
 
+    // Checks text channel activity and responds to specific commands
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
 

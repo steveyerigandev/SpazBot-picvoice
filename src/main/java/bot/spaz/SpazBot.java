@@ -14,6 +14,7 @@ public class SpazBot extends ListenerAdapter {
 
     public static void main(String[] args) throws LoginException {
 
+        // Creates bot
         JDABuilder.createDefault(new Token().getToken())
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES)
                 .setActivity(Activity.playing("the dangerous game of figuring out how to code a bot"))  // sets default bot activity

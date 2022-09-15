@@ -1,6 +1,5 @@
 package bot.spaz;
 
-import edu.cmu.sphinx.api.StreamSpeechRecognizer;
 import net.dv8tion.jda.api.audio.AudioReceiveHandler;
 import net.dv8tion.jda.api.audio.CombinedAudio;
 import net.dv8tion.jda.api.audio.UserAudio;
@@ -9,10 +8,9 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-
 public class SpazVoiceListener extends ListenerAdapter {
 
+    // joins channel of user that types "-join", audio from each user is sent to the convertor
     public void run(MessageReceivedEvent event) {
 
         if (!event.getMessage().getContentRaw().equalsIgnoreCase("-join")) return;
@@ -42,7 +40,8 @@ public class SpazVoiceListener extends ListenerAdapter {
 
                 @Override
                 public void handleUserAudio(@NotNull UserAudio userAudio) {
-                    VoiceInputConvertor convertor = new VoiceInputConvertor(userAudio);
+                    VoiceInputConverter converter = new VoiceInputConverter(userAudio); // creates new converter
+                    // Create generic class and run converter method from converter class instead??
                 }
             });
         } catch (Exception e) {
