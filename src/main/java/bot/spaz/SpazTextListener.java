@@ -28,7 +28,7 @@ public class SpazTextListener extends ListenerAdapter {
             audioManager.closeAudioConnection();
         }
         if(message.getContentRaw().equalsIgnoreCase("-join")){
-            SpeechRecording speechRecording = new SpeechRecording();
+            SpazVoiceListener speechRecording = new SpazVoiceListener();
             speechRecording.run(event);
         }
     }
