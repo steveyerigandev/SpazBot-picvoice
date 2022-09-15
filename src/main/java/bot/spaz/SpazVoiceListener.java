@@ -10,12 +10,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 public class SpazVoiceListener extends ListenerAdapter {
-
-    public static StreamSpeechRecognizer recognizer;
-    private static HashMap<Long, UserVoiceObject> userVoiceObjects = new HashMap<>();
 
     public void run(MessageReceivedEvent event) {
 
@@ -46,11 +42,7 @@ public class SpazVoiceListener extends ListenerAdapter {
 
                 @Override
                 public void handleUserAudio(@NotNull UserAudio userAudio) {
-                    try {
-                        SphinxTranscriber transcriber = new SphinxTranscriber(userAudio);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    VoiceInputConvertor convertor = new VoiceInputConvertor(userAudio);
                 }
             });
         } catch (Exception e) {

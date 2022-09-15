@@ -6,22 +6,18 @@ import net.dv8tion.jda.api.audio.UserAudio;
 import net.dv8tion.jda.api.entities.User;
 
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.logging.Logger;
 
 public class SphinxTranscriber {
-    // Sphinx configuration
 
-    public SphinxTranscriber(UserAudio userAudio) throws IOException {
-        User user = userAudio.getUser();
+    public SphinxTranscriber() throws IOException {
 
+        // sets configuration acoustic model, language, and dictionary
         Configuration configuration = new Configuration();
-
         configuration.setAcousticModelPath("resource:/edu/cmu/sphinx/models/en-us/en-us");
-        configuration.setDictionaryPath("src/main/resources/model.dic");
         configuration.setLanguageModelPath("src/main/resources/model.lm");
+        configuration.setDictionaryPath("src/main/resources/model.dic");
 
         // ignores Sphinx spam in console
         Logger cmRootLogger = Logger.getLogger("default.config");
@@ -31,6 +27,7 @@ public class SphinxTranscriber {
             System.setProperty("java.util.logging.config.file", "ignoreAllSphinx4LoggingOutput");
         }
 
+        // Stream speech recognizer uses InputStream as the source, this can be from a file
         StreamSpeechRecognizer recognizer = new StreamSpeechRecognizer(configuration);
     }
 }
