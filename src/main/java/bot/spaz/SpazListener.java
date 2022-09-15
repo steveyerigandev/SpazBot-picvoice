@@ -87,7 +87,7 @@ public class SpazListener extends ListenerAdapter {
                     public void handleUserAudio(UserAudio userAudio) {
                         if(voiceObjects.containsKey(userAudio.getUser().getIdLong())){
                             final UserVoiceObject voiceObject = voiceObjects.get(userAudio.getUser().getIdLong());
-                            voiceObject.addToPacket(userAudio.getAudioData(1));
+                            voiceObject.addToPacket(userAudio.getAudioData(100));
                         } else {
                             final UserVoiceObject voiceObject = new UserVoiceObject(userAudio.getUser(), userAudio.getAudioData(1));
                             voiceObjects.put(userAudio.getUser().getIdLong(), voiceObject);
