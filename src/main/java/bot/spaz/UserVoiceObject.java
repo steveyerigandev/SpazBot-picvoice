@@ -25,42 +25,42 @@ public class UserVoiceObject {
         int length = (packet != null ? packet.length : toAdd.length);
         if (length >= 576000) {
             try {
-                getResult(SpazListener.recognizer);
+                getResult(SpeechRecording.recognizer);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            packet = toAdd;
+            packet = toAdd; // reset the packet
             return;
         }
-
         byte[] newPacket = new byte[length + 3840];
+        // copy old packet onto new temp array
         System.arraycopy(packet, 0, newPacket, 0, length);
+        // copy toAdd packet onto new temp array
         System.arraycopy(toAdd, 0, newPacket, 3840, toAdd.length);
+        // overwrite the old packet with the newly resized packet
         packet = newPacket;
     }
 
     public void getResult(StreamSpeechRecognizer recognizer) throws FileNotFoundException {
-        // Audio output format specification
+        // specify the output format you want
         AudioFormat target = new AudioFormat(16000f, 16, 1, true, false);
+        // get the audio stream ready and pass the raw byte[]
         final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(packet);
         final AudioInputStream audioInputStream = new AudioInputStream(byteArrayInputStream, AudioReceiveHandler.OUTPUT_FORMAT, packet.length);
-        AudioInputStream AIS = AudioSystem.getAudioInputStream(target, audioInputStream);
-
+        AudioInputStream is = AudioSystem.getAudioInputStream(target, audioInputStream);
+        // write a temporary file to othe computer somewhere, this method will return an InputStream that can be used for recognition
         try {
-
-            AudioSystem.write(AIS, AudioFileFormat.Type.WAVE, new File("src/main/resources/tmp/" + user.getId() + ".wav"));
+            AudioSystem.write(is, AudioFileFormat.Type.WAVE, new File("src/main/resources/tmp/" + user.getId() + ".wav"));
             InputStream stream = new FileInputStream("src/main/resources/tmp/" + user.getId() + ".wav");
-
-            byte[] isArray = new byte[AIS.available()];
+            byte[] isArray = new byte[is.available()];
             byte[] streamArray = new byte[stream.available()];
-
             stream.read(streamArray);
-            AIS.read(isArray);
+            is.read(isArray);
             stream.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         InputStream stream = new FileInputStream("src/main/resources/tmp/" + user.getId() + ".wav");
         try {
             stream = new ByteArrayInputStream(packet);
@@ -70,7 +70,6 @@ public class UserVoiceObject {
 
         recognizer.startRecognition(stream);
         SpeechResult result;
-
         while ((result = recognizer.getResult()) != null) {
             System.out.format("Hypothesis: %s\n", result.getHypothesis());
         }
