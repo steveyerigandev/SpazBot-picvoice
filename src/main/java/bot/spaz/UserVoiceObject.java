@@ -11,12 +11,12 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import java.io.*;
 
-public class VoicePacket {
+public class UserVoiceObject {
 
     private byte[] packet;
     private User user;
 
-    public VoicePacket(User user, byte[] packet) {
+    public UserVoiceObject(User user, byte[] packet) {
         this.user = user;
         this.packet = packet;
     }

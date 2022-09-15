@@ -1,6 +1,5 @@
 package bot.spaz;
 
-import com.iwebpp.crypto.TweetNaclFast;
 import edu.cmu.sphinx.api.Configuration;
 import edu.cmu.sphinx.api.StreamSpeechRecognizer;
 import net.dv8tion.jda.api.audio.AudioReceiveHandler;
@@ -20,7 +19,7 @@ import java.util.logging.Logger;
 public class SpazListener extends ListenerAdapter {
 
     public static StreamSpeechRecognizer recognizer;
-    private static HashMap<Long, VoicePacket> voicePackets = new HashMap<>();
+    private static final HashMap<Long, UserVoiceObject> voiceObjects = new HashMap<>();
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -38,9 +37,13 @@ public class SpazListener extends ListenerAdapter {
             event.getChannel().sendMessage("You said \"" + message.getContentRaw().replace("-spaztest", "").trim() + "\"").queue();
         }
 
+        if (message.getContentRaw().startsWith("-leave")) {
+            AudioManager audioManager = guild.getAudioManager();
+            audioManager.closeAudioConnection();
+        }
+
         if (message.getContentRaw().startsWith("-join")) {
             VoiceChannel voiceChannel = (VoiceChannel) message.getMember().getVoiceState().getChannel();
-//            AudioManager audioManager = guild.getAudioManager();
 
             // sphinx voice recognition configuration, acoustic model, vocab dictionary, pronunciation
             Configuration configuration = new Configuration();
@@ -65,7 +68,6 @@ public class SpazListener extends ListenerAdapter {
 
             try {
                 recognizer = new StreamSpeechRecognizer(configuration);
-                System.out.println("Recognizer initialized.");
                 voiceChannel.getGuild().getAudioManager().setReceivingHandler(new AudioReceiveHandler() {
                     @Override
                     public boolean canReceiveCombined() {
@@ -83,23 +85,18 @@ public class SpazListener extends ListenerAdapter {
 
                     @Override
                     public void handleUserAudio(UserAudio userAudio) {
-                        if(voicePackets.containsKey(userAudio.getUser().getIdLong())){
-                            final VoicePacket voicePacket = voicePackets.get(userAudio.getUser().getIdLong());
-                            voicePacket.addToPacket(userAudio.getAudioData(1));
+                        if(voiceObjects.containsKey(userAudio.getUser().getIdLong())){
+                            final UserVoiceObject voiceObject = voiceObjects.get(userAudio.getUser().getIdLong());
+                            voiceObject.addToPacket(userAudio.getAudioData(1));
                         } else {
-                            final VoicePacket voicePacket = new VoicePacket(userAudio.getUser(), userAudio.getAudioData(1));
-                            voicePackets.put(userAudio.getUser().getIdLong(), voicePacket);
+                            final UserVoiceObject voiceObject = new UserVoiceObject(userAudio.getUser(), userAudio.getAudioData(1));
+                            voiceObjects.put(userAudio.getUser().getIdLong(), voiceObject);
                         }
                     }
                 });
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-
-        if (message.getContentRaw().startsWith("-leave")) {
-            AudioManager audioManager = guild.getAudioManager();
-            audioManager.closeAudioConnection();
         }
     }
 }
