@@ -40,8 +40,9 @@ public class SpazVoiceListener extends ListenerAdapter {
 
                 @Override
                 public void handleUserAudio(@NotNull UserAudio userAudio) {
-                    VoiceInputConverter converter = new VoiceInputConverter(userAudio); // creates new converter
-                    // Create generic class and run converter method from converter class instead??
+                    VoiceInputConverter converter = new VoiceInputConverter(userAudio);
+                    // Save file format as a wave file
+                    converter.saveAudioFile();
                 }
             });
         } catch (Exception e) {
