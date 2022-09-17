@@ -23,6 +23,9 @@ public class VoiceInputConverter {
     }
 
     public void saveAudioFile() {
+
+        // TODO figure out if the audio is sent in at 20ms intervals or
+        //  blips, and how to put them together into one single audio file
         AudioFormat sphinxTargetFormat = new AudioFormat(16000f, 16, 1, true, false);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(audio);
         AudioInputStream ais = new AudioInputStream(byteArrayInputStream, AudioReceiveHandler.OUTPUT_FORMAT, audio.length);
@@ -30,13 +33,12 @@ public class VoiceInputConverter {
         try {
             AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File("src/main/resources/tmp" + user.getIdLong() + ".wav"));
             System.out.println("file written");
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             e.printStackTrace();
         }
     }
-    //TODO Save audio file, convert it to the proper Sphinx encoding/format then Call Sphinx constructor with file
-//        AudioSystem.write(userAudio, AudioFileFormat.Type.WAVE, "src/main/resources/tmp" + user.getId() + ".wav");
-
+    //TODO Save audio file, convert it to the proper Sphinx encoding/format
+    // then Call Sphinx constructor with file
 }
 
