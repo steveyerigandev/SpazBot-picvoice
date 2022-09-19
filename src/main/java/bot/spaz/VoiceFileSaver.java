@@ -25,7 +25,7 @@ public class VoiceFileSaver {
         try {
             User user = userAudio.getUser();
             byte[] newAudio = userAudio.getAudioData(1);
-            newAudio = convertFromStereoToMono(newAudio, user);
+            newAudio = convertFromStereoToMono(newAudio);
             // If user key exists, the newly converted byte[] is added to the existing byte[]
             if (usersAudioData.containsKey(user)) {
                 byte[] existingAudioData = usersAudioData.get(user);
@@ -39,19 +39,17 @@ public class VoiceFileSaver {
         }
     }
 
-    public byte[] convertFromStereoToMono(byte[] newAudio, User user){
+    public byte[] convertFromStereoToMono(byte[] newAudio){
+        byte[] convertedAudio;
         // Target format required by CMU Sphinx 4 for voice recognition
-        byte[] convertedAudio = null;
         AudioFormat target = new AudioFormat(16000, 16, 1, true, false);
         AudioInputStream inputStream = AudioSystem.getAudioInputStream(target, new AudioInputStream(new ByteArrayInputStream(newAudio), AudioReceiveHandler.OUTPUT_FORMAT, newAudio.length));
         try {
             convertedAudio = inputStream.readAllBytes();
         } catch(IOException e){
             System.out.println("Error saving new audio data" + e.getMessage());
+            convertedAudio = null;
         }
-        //TODO figure out how to save the input stream as a new byte[]
-        //TODO method needs logic for converting stereo to mono, update return statement
-//        return inputStream;
         return convertedAudio;
     }
 
