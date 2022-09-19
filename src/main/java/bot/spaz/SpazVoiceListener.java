@@ -3,25 +3,25 @@ package bot.spaz;
 import net.dv8tion.jda.api.audio.AudioReceiveHandler;
 import net.dv8tion.jda.api.audio.CombinedAudio;
 import net.dv8tion.jda.api.audio.UserAudio;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.hooks.VoiceDispatchInterceptor;
 import org.jetbrains.annotations.NotNull;
 
 public class SpazVoiceListener extends ListenerAdapter {
 
     // joins channel of user that types "-join", audio from each user is sent to the convertor
     public void run(MessageReceivedEvent event) {
-
-        if (!event.getMessage().getContentRaw().equalsIgnoreCase("-join")) return;
         VoiceChannel userVoiceChannel = (VoiceChannel) event.getMember().getVoiceState().getChannel();
-
+        System.out.println("Connecting to voice channel");
         try {
             userVoiceChannel.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
         } catch (Exception e) {
-            System.out.println("Error while Joining " + e.getMessage());
+            System.out.println("Error connecting to voice channel: " + e.getMessage());
         }
-
+        VoiceFileSaver voiceFileSaver = new VoiceFileSaver();
         try {
             userVoiceChannel.getGuild().getAudioManager().setReceivingHandler(new AudioReceiveHandler() {
                 @Override
@@ -31,7 +31,7 @@ public class SpazVoiceListener extends ListenerAdapter {
 
                 @Override
                 public boolean canReceiveUser() {
-                    return AudioReceiveHandler.super.canReceiveUser();
+                    return true;
                 }
 
                 @Override
@@ -40,13 +40,11 @@ public class SpazVoiceListener extends ListenerAdapter {
 
                 @Override
                 public void handleUserAudio(@NotNull UserAudio userAudio) {
-                    VoiceInputConverter converter = new VoiceInputConverter(userAudio);
-                    // Save file format as a wave file
-                    converter.saveAudioFile();
+                    voiceFileSaver.updateStream(userAudio);
                 }
             });
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error setting Audio Receive Handler: " + e.getMessage());
         }
     }
 }
