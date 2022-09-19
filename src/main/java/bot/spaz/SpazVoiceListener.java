@@ -15,7 +15,6 @@ public class SpazVoiceListener extends ListenerAdapter {
     // joins channel of user that types "-join", audio from each user is sent to the convertor
     public void run(MessageReceivedEvent event) {
         VoiceChannel userVoiceChannel = (VoiceChannel) event.getMember().getVoiceState().getChannel();
-        System.out.println("Connecting to voice channel");
         try {
             userVoiceChannel.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
         } catch (Exception e) {

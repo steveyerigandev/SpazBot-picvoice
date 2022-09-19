@@ -1,8 +1,16 @@
 package bot.spaz;
 
+import edu.cmu.sphinx.tools.audio.AudioPlayer;
+import net.dv8tion.jda.api.audio.AudioReceiveHandler;
 import net.dv8tion.jda.api.audio.UserAudio;
 import net.dv8tion.jda.api.entities.User;
 
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.spi.AudioFileReader;
+import java.io.*;
 import java.util.HashMap;
 
 public class VoiceFileSaver {
@@ -13,24 +21,38 @@ public class VoiceFileSaver {
     }
 
     public void updateStream(UserAudio userAudio) {
-        byte[] newAudio = userAudio.getAudioData(1);
-        User user = userAudio.getUser();
-        newAudio = convertFromStereoToMono(newAudio);
-
-        // If user key exists, the new byte[] is added to the existing byte[]
-        if (usersAudioData.containsKey(user)) {
-            byte[] existingAudioData = usersAudioData.get(user);
-            usersAudioData.put(user, createMetaAudio(existingAudioData, newAudio));
-        } else {
-
-            // If user key does not exist, creates new hashmap with new user key and byte[]
-            usersAudioData.put(userAudio.getUser(), userAudio.getAudioData(1));
+        // Capture the newly streamed 20 millisecond audio blip and convert it to CMU Sphinx 4 format
+        try {
+            User user = userAudio.getUser();
+            byte[] newAudio = userAudio.getAudioData(1);
+            newAudio = convertFromStereoToMono(newAudio, user);
+            // If user key exists, the newly converted byte[] is added to the existing byte[]
+            if (usersAudioData.containsKey(user)) {
+                byte[] existingAudioData = usersAudioData.get(user);
+                usersAudioData.put(user, createMetaAudio(existingAudioData, newAudio));
+            } else {
+                // If user key does not exist, creates new hashmap with new user key and converted byte[]
+                usersAudioData.put(userAudio.getUser(), newAudio);
+            }
+        } catch(Exception e){
+            System.out.println("Error with updateStream(): " + e.getMessage());
         }
     }
 
-    public byte[] convertFromStereoToMono(byte[] newAudio){
+    public byte[] convertFromStereoToMono(byte[] newAudio, User user){
+        // Target format required by CMU Sphinx 4 for voice recognition
+        byte[] convertedAudio = null;
+        AudioFormat target = new AudioFormat(16000, 16, 1, true, false);
+        AudioInputStream inputStream = AudioSystem.getAudioInputStream(target, new AudioInputStream(new ByteArrayInputStream(newAudio), AudioReceiveHandler.OUTPUT_FORMAT, newAudio.length));
+        try {
+            convertedAudio = inputStream.readAllBytes();
+        } catch(IOException e){
+            System.out.println("Error saving new audio data" + e.getMessage());
+        }
+        //TODO figure out how to save the input stream as a new byte[]
         //TODO method needs logic for converting stereo to mono, update return statement
-        return newAudio;
+//        return inputStream;
+        return convertedAudio;
     }
 
     public byte[] createMetaAudio(byte[] existingAudio, byte[] newAudio) {
