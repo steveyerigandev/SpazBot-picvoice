@@ -12,6 +12,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.spi.AudioFileReader;
 import java.io.*;
 import java.util.HashMap;
+import java.util.zip.Adler32;
 
 public class VoiceFileSaver {
 
@@ -20,37 +21,39 @@ public class VoiceFileSaver {
     public VoiceFileSaver() {
     }
 
-    public void updateStream(UserAudio userAudio) {
-        // Capture the newly streamed 20 millisecond audio blip and convert it to CMU Sphinx 4 format
+    public void newStream(UserAudio userAudio) {
+        User user = userAudio.getUser();
+        byte[] audio = userAudio.getAudioData(1);
+
         try {
-            User user = userAudio.getUser();
-            byte[] newAudio = userAudio.getAudioData(1);
-            newAudio = convertFromStereoToMono(newAudio);
+            convertThenWrite(audio, user);
+//            addToExistingAudio(user);
             // If user key exists, the newly converted byte[] is added to the existing byte[]
             if (usersAudioData.containsKey(user)) {
                 byte[] existingAudioData = usersAudioData.get(user);
-                usersAudioData.put(user, createMetaAudio(existingAudioData, newAudio));
+                usersAudioData.put(user, createMetaAudio(existingAudioData, audio));
             } else {
                 // If user key does not exist, creates new hashmap with new user key and converted byte[]
-                usersAudioData.put(userAudio.getUser(), newAudio);
+                usersAudioData.put(userAudio.getUser(), audio);
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Error with updateStream(): " + e.getMessage());
         }
     }
 
-    public byte[] convertFromStereoToMono(byte[] newAudio){
-        byte[] convertedAudio;
+    public void addToExistingAudio(){
+
+    }
+
+    public void convertThenWrite(byte[] audio, User user) {
         // Target format required by CMU Sphinx 4 for voice recognition
         AudioFormat target = new AudioFormat(16000, 16, 1, true, false);
-        AudioInputStream inputStream = AudioSystem.getAudioInputStream(target, new AudioInputStream(new ByteArrayInputStream(newAudio), AudioReceiveHandler.OUTPUT_FORMAT, newAudio.length));
+        AudioInputStream ais = new AudioInputStream(new ByteArrayInputStream(audio), target, audio.length);
         try {
-            convertedAudio = inputStream.readAllBytes();
-        } catch(IOException e){
-            System.out.println("Error saving new audio data" + e.getMessage());
-            convertedAudio = null;
+            AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File("src/main/resources/tmp/" + user.getIdLong() + "temp.wav"));
+        } catch (Exception e) {
+            System.out.println("Error converting, saving or combining files" + e.getMessage());
         }
-        return convertedAudio;
     }
 
     public byte[] createMetaAudio(byte[] existingAudio, byte[] newAudio) {
@@ -59,7 +62,7 @@ public class VoiceFileSaver {
         return combinedArray;
     }
 
-    public void saveAudio(){
+    public void saveAudio() {
         //TODO method needs logic for saving or overwriting audio file, based on user ID, must be WAVE format
     }
 }
