@@ -25,14 +25,15 @@ public class VoiceFileSaver {
 
         try {
             AudioInputStream newClip = convertStereoToMono(userAudio.getAudioData(1));
-            AudioSystem.write(newClip, AudioFileFormat.Type.WAVE, new File("src/main/resources/tmp/" + userAudio.getUser().getIdLong() + "TEMPORARY.wav"));
-
-            // If user key exists, the newly converted byte[] is added to the existing byte[]
+            // If user key exists, the new audio file is added to the existing audio file
             if (usersAudioData.containsKey(userAudio.getUser())) {
-//                AudioSystem.write(convertedAudioInputStream, AudioFileFormat.Type.WAVE, new File("src/main/resources/tmp/" + userAudio.getUser().getIdLong() + "TEMP.wav"));
                 try {
+                    AudioSystem.write(newClip, AudioFileFormat.Type.WAVE, new File("src/main/resources/tmp/" + userAudio.getUser().getIdLong() + "TEMP.wav"));
+                    AudioInputStream convertedClip = AudioSystem.getAudioInputStream(new File("src/main/resources/tmp/" + userAudio.getUser().getIdLong() + "TEMP.wav"));
                     AudioInputStream existingClip = AudioSystem.getAudioInputStream(new File("src/main/resources/tmp/" + userAudio.getUser().getIdLong() + ".wav"));
-                    AudioInputStream appendedAudio = new AudioInputStream(new SequenceInputStream(existingClip, newClip), existingClip.getFormat(), existingClip.getFrameLength() + newClip.getFrameLength());
+                    System.out.println(existingClip.getFormat());
+                    System.out.println(convertedClip.getFormat());
+                    AudioInputStream appendedAudio = new AudioInputStream(new SequenceInputStream(existingClip, convertedClip), existingClip.getFormat(), existingClip.getFrameLength() + convertedClip.getFrameLength());
                     AudioSystem.write(appendedAudio, AudioFileFormat.Type.WAVE, new File("src/main/resources/tmp/" + userAudio.getUser().getIdLong() + ".wav"));
                 } catch (Exception e) {
                     System.out.println("Error appending audio files:" + e.getMessage());
