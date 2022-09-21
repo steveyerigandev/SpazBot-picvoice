@@ -16,53 +16,40 @@ import java.util.zip.Adler32;
 
 public class VoiceFileSaver {
 
-    HashMap<User, byte[]> usersAudioData = new HashMap<>();
+    HashMap<User, String> usersAudioData = new HashMap<>();
 
     public VoiceFileSaver() {
     }
 
     public void newStream(UserAudio userAudio) {
-        User user = userAudio.getUser();
-        byte[] audio = userAudio.getAudioData(1);
 
         try {
-            convertThenWrite(audio, user);
-//            addToExistingAudio(user);
+            AudioInputStream newClip = convertStereoToMono(userAudio.getAudioData(1));
+            AudioSystem.write(newClip, AudioFileFormat.Type.WAVE, new File("src/main/resources/tmp/" + userAudio.getUser().getIdLong() + "TEMPORARY.wav"));
+
             // If user key exists, the newly converted byte[] is added to the existing byte[]
-            if (usersAudioData.containsKey(user)) {
-                byte[] existingAudioData = usersAudioData.get(user);
-                usersAudioData.put(user, createMetaAudio(existingAudioData, audio));
+            if (usersAudioData.containsKey(userAudio.getUser())) {
+//                AudioSystem.write(convertedAudioInputStream, AudioFileFormat.Type.WAVE, new File("src/main/resources/tmp/" + userAudio.getUser().getIdLong() + "TEMP.wav"));
+                try {
+                    AudioInputStream existingClip = AudioSystem.getAudioInputStream(new File("src/main/resources/tmp/" + userAudio.getUser().getIdLong() + ".wav"));
+                    AudioInputStream appendedAudio = new AudioInputStream(new SequenceInputStream(existingClip, newClip), existingClip.getFormat(), existingClip.getFrameLength() + newClip.getFrameLength());
+                    AudioSystem.write(appendedAudio, AudioFileFormat.Type.WAVE, new File("src/main/resources/tmp/" + userAudio.getUser().getIdLong() + ".wav"));
+                } catch (Exception e) {
+                    System.out.println("Error appending audio files:" + e.getMessage());
+                }
             } else {
-                // If user key does not exist, creates new hashmap with new user key and converted byte[]
-                usersAudioData.put(userAudio.getUser(), audio);
+                // If user key does not exist, creates new hashmap with new user key and file name as a String
+                usersAudioData.put(userAudio.getUser(), "src/main/resources/tmp/" + userAudio.getUser().getIdLong() + ".wav");
+                AudioSystem.write(newClip, AudioFileFormat.Type.WAVE, new File("src/main/resources/tmp/" + userAudio.getUser().getIdLong() + ".wav"));
             }
         } catch (Exception e) {
-            System.out.println("Error with updateStream(): " + e.getMessage());
+            System.out.println("Error converting from stereo to mono: " + e.getMessage());
         }
     }
 
-    public void addToExistingAudio(){
-
-    }
-
-    public void convertThenWrite(byte[] audio, User user) {
+    public AudioInputStream convertStereoToMono(byte[] audio) {
         // Target format required by CMU Sphinx 4 for voice recognition
         AudioFormat target = new AudioFormat(16000, 16, 1, true, false);
-        AudioInputStream ais = new AudioInputStream(new ByteArrayInputStream(audio), target, audio.length);
-        try {
-            AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File("src/main/resources/tmp/" + user.getIdLong() + "temp.wav"));
-        } catch (Exception e) {
-            System.out.println("Error converting, saving or combining files" + e.getMessage());
-        }
-    }
-
-    public byte[] createMetaAudio(byte[] existingAudio, byte[] newAudio) {
-        //TODO method needs logic for combining byte[]s, update return statement
-        byte[] combinedArray = existingAudio;
-        return combinedArray;
-    }
-
-    public void saveAudio() {
-        //TODO method needs logic for saving or overwriting audio file, based on user ID, must be WAVE format
+        return new AudioInputStream(new ByteArrayInputStream(audio), target, audio.length);
     }
 }

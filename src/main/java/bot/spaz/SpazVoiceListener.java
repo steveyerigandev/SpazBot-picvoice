@@ -14,13 +14,16 @@ public class SpazVoiceListener extends ListenerAdapter {
 
     // joins channel of user that types "-join", audio from each user is sent to the convertor
     public void run(MessageReceivedEvent event) {
+
         VoiceChannel userVoiceChannel = (VoiceChannel) event.getMember().getVoiceState().getChannel();
+        VoiceFileSaver voiceFileSaver = new VoiceFileSaver();
+
         try {
             userVoiceChannel.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
         } catch (Exception e) {
             System.out.println("Error connecting to voice channel: " + e.getMessage());
         }
-        VoiceFileSaver voiceFileSaver = new VoiceFileSaver();
+
         try {
             userVoiceChannel.getGuild().getAudioManager().setReceivingHandler(new AudioReceiveHandler() {
                 @Override
