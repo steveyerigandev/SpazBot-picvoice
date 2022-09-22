@@ -5,10 +5,7 @@ import net.dv8tion.jda.api.audio.AudioReceiveHandler;
 import net.dv8tion.jda.api.audio.UserAudio;
 import net.dv8tion.jda.api.entities.User;
 
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.*;
 import javax.sound.sampled.spi.AudioFileReader;
 import java.io.*;
 import java.util.HashMap;
@@ -24,15 +21,13 @@ public class VoiceFileSaver {
     public void newStream(UserAudio userAudio) {
 
         try {
-            AudioInputStream newClip = convertStereoToMono(userAudio.getAudioData(1));
+            AudioInputStream newClip = convertToMono(userAudio.getAudioData(1));
             // If user key exists, the new audio file is added to the existing audio file
             if (usersAudioData.containsKey(userAudio.getUser())) {
                 try {
                     AudioSystem.write(newClip, AudioFileFormat.Type.WAVE, new File("src/main/resources/tmp/" + userAudio.getUser().getIdLong() + "TEMP.wav"));
                     AudioInputStream convertedClip = AudioSystem.getAudioInputStream(new File("src/main/resources/tmp/" + userAudio.getUser().getIdLong() + "TEMP.wav"));
                     AudioInputStream existingClip = AudioSystem.getAudioInputStream(new File("src/main/resources/tmp/" + userAudio.getUser().getIdLong() + ".wav"));
-                    System.out.println(existingClip.getFormat());
-                    System.out.println(convertedClip.getFormat());
                     AudioInputStream appendedAudio = new AudioInputStream(new SequenceInputStream(existingClip, convertedClip), existingClip.getFormat(), existingClip.getFrameLength() + convertedClip.getFrameLength());
                     AudioSystem.write(appendedAudio, AudioFileFormat.Type.WAVE, new File("src/main/resources/tmp/" + userAudio.getUser().getIdLong() + ".wav"));
                 } catch (Exception e) {
@@ -48,11 +43,11 @@ public class VoiceFileSaver {
         }
     }
 
-    public AudioInputStream convertStereoToMono(byte[] audio) {
-        // Target format required by CMU Sphinx 4 for voice recognition
-        AudioFormat target = new AudioFormat(16000, 16, 1, true, false);
-        AudioFormat testTarget = new AudioFormat(48000, 16, 2, true, true);
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(audio);
-        return new AudioInputStream(byteArrayInputStream, testTarget, audio.length);
+    public AudioInputStream convertToMono(byte[] audio) {
+        AudioFormat sourceFormat = new AudioFormat(48000, 16, 2, true, true);
+        System.out.println(sourceFormat);
+        AudioFormat targetFormat = new AudioFormat(sourceFormat.getEncoding(), 16000f, 16, 1, (sourceFormat.getSampleSizeInBits() + 7) / 8, sourceFormat.getFrameRate(), true);
+        AudioInputStream ais = new AudioInputStream(new ByteArrayInputStream(audio), targetFormat, audio.length);
+        return ais;
     }
 }
