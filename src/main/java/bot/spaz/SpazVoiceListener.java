@@ -43,7 +43,6 @@ public class SpazVoiceListener extends ListenerAdapter {
                 @Override
                 public void handleUserAudio(@NotNull UserAudio userAudio) {
                     voiceFileSaver.newStream(userAudio);
-                    System.out.println(Math.floor(Math.random()*(100-1+1)+1));
                 }
             });
         } catch (Exception e) {
