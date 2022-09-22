@@ -51,6 +51,8 @@ public class VoiceFileSaver {
     public AudioInputStream convertStereoToMono(byte[] audio) {
         // Target format required by CMU Sphinx 4 for voice recognition
         AudioFormat target = new AudioFormat(16000, 16, 1, true, false);
-        return new AudioInputStream(new ByteArrayInputStream(audio), target, audio.length);
+        AudioFormat testTarget = new AudioFormat(48000, 16, 2, true, true);
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(audio);
+        return new AudioInputStream(byteArrayInputStream, testTarget, audio.length);
     }
 }
