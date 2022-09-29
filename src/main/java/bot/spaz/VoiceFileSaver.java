@@ -52,7 +52,6 @@ public class VoiceFileSaver {
     public AudioInputStream convertToMono(byte[] audio) {
 //        AudioFormat sourceFormat = new AudioFormat(48000, 16, 2, true, true);
         AudioFormat targetFormat = new AudioFormat(16000f, 16, 1,  true, false);
-        AudioInputStream ais = new AudioInputStream(new ByteArrayInputStream(audio), targetFormat, audio.length);
-        return ais;
+        return new AudioInputStream(new ByteArrayInputStream(audio), targetFormat, audio.length);
     }
 }
