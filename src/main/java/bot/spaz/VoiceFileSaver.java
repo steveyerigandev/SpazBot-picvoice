@@ -20,6 +20,8 @@ public class VoiceFileSaver {
 
     public void newStream(UserAudio userAudio) {
 
+        // TODO Figure out how to play back audio data within IntelliJ THEN figure out how to store it temporarily as a full
+//      // TODO consolidated sound file
         // TODO First take the userAudio.getAudioData(1) original stereo byte[] and convert it into the target mono byte[]
         // TODO If a mono byte[] exists, figure out a way to concatenate the byte[]s together, either raw, or by switching
         // TODO to an InputStream or saving as a WAVE file
