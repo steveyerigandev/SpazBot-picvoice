@@ -40,7 +40,9 @@ public class SpazVoiceListener extends ListenerAdapter {
 
                 @Override
                 public void handleUserAudio(@NotNull UserAudio userAudio) {
-                    voiceFileSaver.newStream(userAudio);
+                    if (!userAudio.getUser().isBot()) {
+                        voiceFileSaver.newStream(userAudio);
+                    }
                 }
             });
         } catch (Exception e) {

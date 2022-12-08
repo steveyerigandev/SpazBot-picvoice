@@ -8,13 +8,20 @@ import net.dv8tion.jda.api.entities.User;
 import javax.sound.sampled.*;
 import javax.sound.sampled.spi.AudioFileReader;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.zip.Adler32;
 
 public class VoiceFileSaver {
 
+    List<AudioInputStream> audioInputStreamList = new ArrayList<>();
     HashMap<User, String> usersAudioData = new HashMap<>();
     AudioInputStream storedInputStream;
+    User user;
+
+    AudioFormat sourceFormat = new AudioFormat(48000, 16, 2, true, true);
+    AudioFormat targetFormat = new AudioFormat(16000, 16, 1, true, false);
 
     public VoiceFileSaver() {
     }
@@ -33,16 +40,16 @@ public class VoiceFileSaver {
 
         int totalFramesRead = 0;
         byte[] audioArray = userAudio.getAudioData(1);
-        User user = userAudio.getUser();
-        AudioFormat sourceFormat = new AudioFormat(48000, 16, 2, true, true);
+        user = userAudio.getUser();
 
         try {
             AudioInputStream ais = new AudioInputStream(new ByteArrayInputStream(audioArray), sourceFormat, audioArray.length);
+            audioInputStreamList.add(ais);
             Clip clip = AudioSystem.getClip();
             clip.open(ais);
             clip.start();
         } catch (Exception e) {
-            System.out.println("Error combining source audio: " + e.getMessage());
+            System.out.println("Error adding AudioInputStream to List: " + e.getMessage());
         }
     }
 
