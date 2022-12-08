@@ -29,7 +29,11 @@ public class VoiceFileSaver {
         // TODO file reset may need to happen in the AudioRecieveHandler that way each tile it's reset, it is
         // TODO not recording and adding the the end of a preexisting audio file
         try {
-            AudioInputStream newAudio = convertToMono(userAudio.getAudioData(1));
+//            AudioInputStream newAudio = convertToMono(userAudio.getAudioData(1));
+            AudioInputStream newAudio = convertToMono(userAudio);
+            Clip clip = AudioSystem.getClip();
+            clip.open(newAudio);
+            clip.start();
             // If user key exists, the new audio file is added to the existing audio file
             if (usersAudioData.containsKey(userAudio.getUser())) {
                 try {
@@ -51,9 +55,10 @@ public class VoiceFileSaver {
         }
     }
 
-    public AudioInputStream convertToMono(byte[] audio) {
-//        AudioFormat sourceFormat = new AudioFormat(48000, 16, 2, true, true);
-        AudioFormat targetFormat = new AudioFormat(16000f, 16, 1,  true, false);
-        return new AudioInputStream(new ByteArrayInputStream(audio), targetFormat, audio.length);
+    public AudioInputStream convertToMono(UserAudio userAudio) {
+        byte[] audio = userAudio.getAudioData(1);
+        AudioFormat sourceFormat = new AudioFormat(48000, 16, 2, true, true);
+//        AudioFormat targetFormat = new AudioFormat(16000f, 16, 1,  true, false);
+        return new AudioInputStream(new ByteArrayInputStream(audio), sourceFormat, audio.length);
     }
 }
