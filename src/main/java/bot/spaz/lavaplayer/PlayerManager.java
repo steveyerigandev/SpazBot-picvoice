@@ -63,12 +63,12 @@ public class PlayerManager {
 
             @Override
             public void noMatches() {
-
+                textChannel.sendMessage("No Matches");
             }
 
             @Override
             public void loadFailed(FriendlyException e) {
-
+                textChannel.sendMessage("Load Failed.");
             }
         });
     }
