@@ -1,5 +1,6 @@
-package bot.spaz;
+package bot.spaz.listeners;
 
+import bot.spaz.VoiceFileSaver;
 import net.dv8tion.jda.api.audio.AudioReceiveHandler;
 import net.dv8tion.jda.api.audio.CombinedAudio;
 import net.dv8tion.jda.api.audio.UserAudio;

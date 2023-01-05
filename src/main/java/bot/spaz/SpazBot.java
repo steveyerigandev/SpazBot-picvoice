@@ -1,5 +1,6 @@
 package bot.spaz;
 
+import bot.spaz.listeners.SpazTextListener;
 import ignored.Token;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;

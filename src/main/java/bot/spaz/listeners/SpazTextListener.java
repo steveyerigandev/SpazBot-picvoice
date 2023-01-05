@@ -1,14 +1,9 @@
-package bot.spaz;
+package bot.spaz.listeners;
 
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
-
-import javax.sound.sampled.*;
-import javax.sound.sampled.spi.AudioFileReader;
-import java.io.File;
-import java.io.IOException;
 
 public class SpazTextListener extends ListenerAdapter {
 
