@@ -13,24 +13,24 @@ public class TrackScheduler extends AudioEventAdapter {
     public final AudioPlayer audioPlayer;
     public final BlockingQueue<AudioTrack> queue;
 
-    public TrackScheduler (AudioPlayer audioPlayer){
+    public TrackScheduler(AudioPlayer audioPlayer) {
         this.audioPlayer = audioPlayer;
         this.queue = new LinkedBlockingQueue<>();
     }
 
-    public void queue(AudioTrack track){
-        if(!this.audioPlayer.startTrack(track, true)){
+    public void queue(AudioTrack track) {
+        if (!this.audioPlayer.startTrack(track, true)) {
             this.queue.offer(track);
         }
     }
 
-    public void nextTrack(){
+    public void nextTrack() {
         this.audioPlayer.startTrack(this.queue.poll(), false);
     }
 
     @Override
-    public void onTrackEnd (AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason){
-        if(endReason.mayStartNext){
+    public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        if (endReason.mayStartNext) {
             nextTrack();
         }
     }
