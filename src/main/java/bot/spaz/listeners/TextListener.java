@@ -1,6 +1,7 @@
 package bot.spaz.listeners;
 
 import bot.spaz.commands.CmdJoin;
+import bot.spaz.commands.CmdLeave;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -16,36 +17,45 @@ public class TextListener extends ListenerAdapter {
         Message message = event.getMessage();
         User user = message.getAuthor();
         String content = message.getContentRaw();
+        VoiceChannel userVoiceChannel = null;
+        TextChannel userTextChannel = event.getGuildChannel().asTextChannel();
+        AudioManager audioManager = guild.getAudioManager();
+        CmdJoin join = new CmdJoin();
+        CmdLeave leave = new CmdLeave();
 
+
+        // ENSURES THE COMMAND STARTS WITH '-' OR IT'S NOT FROM A BOT
         if (user.isBot() || !content.startsWith("-")) return;
 
+        // ATTEMPTS TO GRAB A VOICE CHANNEL IF ANY
+        try {
+            userVoiceChannel = (VoiceChannel) event.getMember().getVoiceState().getChannel();
+        } catch (Exception e) {
+            userTextChannel.sendMessage("Error I don't understand wtf is going on bro").queue();
+        }
+
+        // JUST TEST NONSENSE
         if (content.startsWith("-spaztest")) {
             event.getChannel().sendMessage("You said \"" + message.getContentRaw().replace("-spaztest", "").trim() + "\"").queue();
         }
 
+        // LEAVE VOICE CHANNEL
         if (message.getContentRaw().equalsIgnoreCase("-leave")) {
-            AudioManager audioManager = guild.getAudioManager();
-            audioManager.closeAudioConnection();
+            leave.leave(audioManager);
         }
 
+        // JOIN VOICE CHANNEL
         if (message.getContentRaw().equalsIgnoreCase("-join")) {
-//            CmdJoin join = new CmdJoin(event);
-//            join.joinChannel();
-            VoiceChannel userVoiceChannel;
-            try {
-                userVoiceChannel = (VoiceChannel) event.getMember().getVoiceState().getChannel();
-                if (userVoiceChannel == null) {
-                    event.getChannel().sendMessage("Unable to join, must be in a voice channel").queue();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            if(userVoiceChannel != null){
+                join.setVoiceChannel(userVoiceChannel);
+                join.joinChannel();
+            } else {
+                userTextChannel.sendMessage("Unable to join, user must be in a voice channel").queue();
             }
-            VoiceListener voiceListener = new VoiceListener();
-            voiceListener.run(event);
         }
 
+        // WORK IN PROGRESS PLAY LAVAPLAYER
         if (message.getContentRaw().equalsIgnoreCase("-play")) {
-            VoiceChannel userVoiceChannel;
             String songRequest = message.getContentRaw().substring(5);
             try {
                 userVoiceChannel = (VoiceChannel) event.getMember().getVoiceState().getChannel();
