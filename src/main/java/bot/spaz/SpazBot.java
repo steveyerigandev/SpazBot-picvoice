@@ -1,6 +1,6 @@
 package bot.spaz;
 
-import bot.spaz.listeners.SpazTextListener;
+import bot.spaz.listeners.TextListener;
 import ignored.Token;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
@@ -21,7 +21,7 @@ public class SpazBot extends ListenerAdapter {
                 .setActivity(Activity.playing("the dangerous game of figuring out how to code a bot"))  // sets default bot activity
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
                 .enableCache(CacheFlag.VOICE_STATE)
-                .addEventListeners(new SpazTextListener())
+                .addEventListeners(new TextListener())
                 .build();
     }
 }

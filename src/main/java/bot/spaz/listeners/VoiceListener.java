@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
-public class SpazVoiceListener extends ListenerAdapter {
+public class VoiceListener extends ListenerAdapter {
 
     // joins channel of user that types "-join", audio from each user is sent to the convertor
     public void run(MessageReceivedEvent event) {
@@ -42,7 +42,7 @@ public class SpazVoiceListener extends ListenerAdapter {
                 @Override
                 public void handleUserAudio(@NotNull UserAudio userAudio) {
                     if (!userAudio.getUser().isBot()) {
-                        voiceFileSaver.newStream(userAudio);
+//                        voiceFileSaver.newStream(userAudio);
                     }
                 }
             });
