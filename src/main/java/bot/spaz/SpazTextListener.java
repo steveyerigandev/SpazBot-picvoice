@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 import javax.sound.sampled.*;
+import javax.sound.sampled.spi.AudioFileReader;
 import java.io.File;
 import java.io.IOException;
 
@@ -20,9 +21,7 @@ public class SpazTextListener extends ListenerAdapter {
         User user = message.getAuthor();
         String content = message.getContentRaw();
 
-        if (user.isBot()) return;
-
-        if (!content.startsWith("-")) return;
+        if (user.isBot() || !content.startsWith("-")) return;
 
         if (content.startsWith("-spaztest")) {
             event.getChannel().sendMessage("You said \"" + message.getContentRaw().replace("-spaztest", "").trim() + "\"").queue();
@@ -38,6 +37,9 @@ public class SpazTextListener extends ListenerAdapter {
         }
         if (message.getContentRaw().equalsIgnoreCase("-play")) {
             // music player commands
+        }
+        if(message.getContentRaw().equalsIgnoreCase("-clip")){
+
         }
     }
 }
