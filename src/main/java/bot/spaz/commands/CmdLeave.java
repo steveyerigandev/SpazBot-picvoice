@@ -8,6 +8,7 @@ public class CmdLeave {
     }
 
     public void leave(AudioManager audioManager){
+        audioManager = audioManager.getGuild().getAudioManager();
         audioManager.closeAudioConnection();
     }
 }
