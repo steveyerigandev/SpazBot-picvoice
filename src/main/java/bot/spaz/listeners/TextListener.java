@@ -34,7 +34,7 @@ public class TextListener extends ListenerAdapter {
                 join.setVoiceChannel(userVoiceChannel);
             }
         } catch (Exception e) {
-            userTextChannel.sendMessage("Error I don't understand wtf is going on bro").queue();
+            userTextChannel.sendMessage("You must be in a voice channel").queue();
         }
 
         // JUST TEST NONSENSE
