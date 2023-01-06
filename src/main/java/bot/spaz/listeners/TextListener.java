@@ -2,6 +2,7 @@ package bot.spaz.listeners;
 
 import bot.spaz.commands.CmdJoin;
 import bot.spaz.commands.CmdLeave;
+import bot.spaz.commands.CmdPlay;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -22,20 +23,21 @@ public class TextListener extends ListenerAdapter {
         AudioManager audioManager = guild.getAudioManager();
         CmdJoin join = new CmdJoin();
         CmdLeave leave = new CmdLeave();
+        CmdPlay play = new CmdPlay();
 
 
         // ENSURES THE COMMAND STARTS WITH '-' OR IT'S NOT FROM A BOT
         if (user.isBot() || !content.startsWith("-")) return;
 
         // ATTEMPTS TO GRAB THE USER VOICE CHANNEL IF ANY
-        try {
-            userVoiceChannel = (VoiceChannel) event.getMember().getVoiceState().getChannel();
-            if (userVoiceChannel != null) {
-                join.setVoiceChannel(userVoiceChannel);
-            }
-        } catch (Exception e) {
-            userTextChannel.sendMessage("You must be in a voice channel").queue();
-        }
+//        try {
+//            userVoiceChannel = (VoiceChannel) event.getMember().getVoiceState().getChannel();
+//            if (userVoiceChannel != null) {
+//                join.setVoiceChannel(userVoiceChannel);
+//            }
+//        } catch (Exception e) {
+//            userTextChannel.sendMessage("You must be in a voice channel -- userVoiceChannel is NULL").queue();
+//        }
 
         // JUST TEST NONSENSE
         if (content.startsWith("-spaztest")) {
@@ -51,7 +53,7 @@ public class TextListener extends ListenerAdapter {
         // JOIN VOICE CHANNEL
         if (message.getContentRaw().equalsIgnoreCase("-join")) {
             if (userVoiceChannel != null) {
-                join.joinChannel();
+//                join.joinChannel();
             } else {
                 userTextChannel.sendMessage("Unable to join, user must be in a voice channel").queue();
             }
@@ -59,20 +61,21 @@ public class TextListener extends ListenerAdapter {
 
         // WORK IN PROGRESS PLAY LAVAPLAYER
         if (message.getContentRaw().substring(0, 5).equalsIgnoreCase("-play")) {
-            String songRequest = message.getContentRaw().substring(5);
+            String link = message.getContentRaw().substring(5);
             label:
             try {
+
                 if (userVoiceChannel == null) {
                     event.getChannel().sendMessage("Unable to queue song, user must be in a voice channel").queue();
                     break label;
                 }
-                if (songRequest.trim().equals("")) {
-                    event.getChannel().sendMessage("Empty request.").queue();
-                    break label;
-                } else {
-                    event.getChannel().sendMessage("(TEST) You want to listen to **" + songRequest + "**").queue();
-                    // play music
+
+                else {
+//                    join.joinChannel();
                 }
+
+                play.play(link, userVoiceChannel, userTextChannel);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

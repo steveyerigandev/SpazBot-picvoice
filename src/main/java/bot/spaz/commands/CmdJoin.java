@@ -1,21 +1,30 @@
 package bot.spaz.commands;
 
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 
-public class CmdJoin {
+public class CmdJoin extends ListenerAdapter {
 
-    VoiceChannel voiceChannel;
+    VoiceChannel userVoiceChannel;
 
-    public void setVoiceChannel(VoiceChannel voiceChannel) {
-        this.voiceChannel = voiceChannel;
-    }
+    @Override
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
-    public void joinChannel(){
-        try {
-            voiceChannel.getGuild().getAudioManager().openAudioConnection(voiceChannel);
-        } catch (Exception e) {
-            e.printStackTrace();
+        String[] message = event.getMessage().getContentRaw().split(" ");
+
+        if (message[0].equalsIgnoreCase("-join")) {
+            try {
+                userVoiceChannel = (VoiceChannel) event.getMessage().getMember().getVoiceState().getChannel();
+                if (userVoiceChannel == null) {
+                    event.getChannel().sendMessage("You must be in a voice channel.").queue();
+                } else {
+                    userVoiceChannel.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
