@@ -10,12 +10,11 @@ public class CmdLeave extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
-        VoiceChannel userVoiceChannel;
-
         if (event.getAuthor().isBot()) {
             return;
         }
 
+        VoiceChannel userVoiceChannel;
         String[] message = event.getMessage().getContentRaw().split(" ");
 
         if (message[0].equalsIgnoreCase("-leave")) {
@@ -23,9 +22,9 @@ public class CmdLeave extends ListenerAdapter {
                 userVoiceChannel = (VoiceChannel) event.getMessage().getMember().getVoiceState().getChannel();
                 if (userVoiceChannel == null) {
                     event.getChannel().sendMessage("You must be in a voice channel to use commands.").queue();
-                } else {
-                    userVoiceChannel.getGuild().getAudioManager().closeAudioConnection();
+                    return;
                 }
+                userVoiceChannel.getGuild().getAudioManager().closeAudioConnection();
             } catch (Exception e) {
                 e.printStackTrace();
             }
