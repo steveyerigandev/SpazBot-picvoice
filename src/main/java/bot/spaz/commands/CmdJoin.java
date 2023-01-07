@@ -22,9 +22,13 @@ public class CmdJoin extends ListenerAdapter {
                 userVoiceChannel = (VoiceChannel) event.getMessage().getMember().getVoiceState().getChannel();
                 if (userVoiceChannel == null) {
                     event.getChannel().sendMessage("You must be in a voice channel to use commands.").queue();
-                } else {
-                    userVoiceChannel.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
+                    return;
                 }
+                if (userVoiceChannel.getGuild().getSelfMember().getVoiceState().inAudioChannel()) {
+                    event.getChannel().sendMessage("I'm already in a channel BRUH.").queue();
+                    return;
+                }
+                userVoiceChannel.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
             } catch (Exception e) {
                 e.printStackTrace();
             }
