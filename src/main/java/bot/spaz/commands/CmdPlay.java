@@ -1,7 +1,6 @@
 package bot.spaz.commands;
 
 import bot.spaz.lavaplayer.PlayerManager;
-import bot.spaz.lavaplayer.TrackScheduler;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
