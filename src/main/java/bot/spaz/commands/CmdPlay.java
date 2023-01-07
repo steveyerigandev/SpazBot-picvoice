@@ -1,6 +1,7 @@
 package bot.spaz.commands;
 
 import bot.spaz.lavaplayer.PlayerManager;
+import bot.spaz.lavaplayer.TrackScheduler;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -14,6 +15,7 @@ public class CmdPlay extends ListenerAdapter{
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+
         if (event.getAuthor().isBot()) {
             return;
         }
@@ -31,7 +33,7 @@ public class CmdPlay extends ListenerAdapter{
                     return;
                 }
                 if (userVoiceChannel.getGuild().getSelfMember().getVoiceState().getChannel() != userVoiceChannel) {
-                    event.getChannel().sendMessage("I'm already in a different channel BRUH.").queue();
+                    event.getChannel().sendMessage("I'm in a different channel BRUH.").queue();
                     return;
                 }
 

@@ -3,6 +3,7 @@ package bot.spaz;
 import bot.spaz.commands.CmdJoin;
 import bot.spaz.commands.CmdLeave;
 import bot.spaz.commands.CmdPlay;
+import bot.spaz.commands.CmdSkip;
 import ignored.Token;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
@@ -25,6 +26,7 @@ public class SpazBot extends ListenerAdapter {
                 .addEventListeners(new CmdJoin())
                 .addEventListeners(new CmdLeave())
                 .addEventListeners(new CmdPlay())
+                .addEventListeners(new CmdSkip())
                 .build();
     }
 }

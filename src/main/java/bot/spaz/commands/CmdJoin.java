@@ -25,7 +25,7 @@ public class CmdJoin extends ListenerAdapter {
                     return;
                 }
                 if (userVoiceChannel.getGuild().getSelfMember().getVoiceState().inAudioChannel()) {
-                    event.getChannel().sendMessage("I'm already in a channel BRUH.").queue();
+                    event.getChannel().sendMessage("I'm already in a different channel BRUH.").queue();
                     return;
                 }
                 userVoiceChannel.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
