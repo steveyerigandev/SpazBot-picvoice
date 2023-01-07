@@ -7,18 +7,21 @@ import org.jetbrains.annotations.NotNull;
 
 public class CmdJoin extends ListenerAdapter {
 
-    VoiceChannel userVoiceChannel;
-
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
+        if (event.getAuthor().isBot()) {
+            return;
+        }
+
+        VoiceChannel userVoiceChannel;
         String[] message = event.getMessage().getContentRaw().split(" ");
 
         if (message[0].equalsIgnoreCase("-join")) {
             try {
                 userVoiceChannel = (VoiceChannel) event.getMessage().getMember().getVoiceState().getChannel();
                 if (userVoiceChannel == null) {
-                    event.getChannel().sendMessage("You must be in a voice channel.").queue();
+                    event.getChannel().sendMessage("You must be in a voice channel to use commands.").queue();
                 } else {
                     userVoiceChannel.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
                 }

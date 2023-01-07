@@ -1,6 +1,7 @@
 package bot.spaz;
 
 import bot.spaz.commands.CmdJoin;
+import bot.spaz.commands.CmdLeave;
 import bot.spaz.commands.CmdPlay;
 import ignored.Token;
 import net.dv8tion.jda.api.JDABuilder;
@@ -21,10 +22,9 @@ public class SpazBot extends ListenerAdapter {
                 .setActivity(Activity.playing("the dangerous game of figuring out how to code a bot"))  // sets default bot activity
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
                 .enableCache(CacheFlag.VOICE_STATE)
-//                .addEventListeners(new TextListener())
                 .addEventListeners(new CmdJoin())
+                .addEventListeners(new CmdLeave())
                 .addEventListeners(new CmdPlay())
-                .addEventListeners(new CmdJoin())
                 .build();
     }
 }
