@@ -24,6 +24,7 @@ public class CmdLeave extends ListenerAdapter {
                     event.getChannel().sendMessage("You must be in a voice channel to use commands.").queue();
                     return;
                 }
+                event.getChannel().sendMessage("NOIGHT! NOIGHT!!").queue();
                 userVoiceChannel.getGuild().getAudioManager().closeAudioConnection();
             } catch (Exception e) {
                 e.printStackTrace();
