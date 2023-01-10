@@ -1,9 +1,11 @@
 package bot.spaz;
 
+import ai.picovoice.porcupine.PorcupineException;
 import bot.spaz.commands.CmdJoin;
 import bot.spaz.commands.CmdLeave;
 import bot.spaz.commands.CmdPlay;
 import bot.spaz.commands.CmdSkip;
+import bot.spaz.listeners.WakeUpWordListener;
 import ignored.JDAToken;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
@@ -15,7 +17,7 @@ import javax.security.auth.login.LoginException;
 
 public class SpazBot extends ListenerAdapter {
 
-    public static void main(String[] args) throws LoginException {
+    public static void main(String[] args) throws LoginException, PorcupineException {
 
         // Create bot
         JDABuilder.createDefault(new JDAToken().getToken())
@@ -28,5 +30,8 @@ public class SpazBot extends ListenerAdapter {
                 .addEventListeners(new CmdPlay())
                 .addEventListeners(new CmdSkip())
                 .build();
+
+//        WakeUpWordListener spazBot = new WakeUpWordListener();
+//        spazBot.Listen();
     }
 }

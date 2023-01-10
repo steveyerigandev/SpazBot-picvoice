@@ -1,5 +1,6 @@
 package bot.spaz.commands;
 
+import bot.spaz.listeners.WakeUpWordListener;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -26,6 +27,7 @@ public class CmdLeave extends ListenerAdapter {
                 }
                 event.getChannel().sendMessage("NOIGHT! NOIGHT!!").queue();
                 userVoiceChannel.getGuild().getAudioManager().closeAudioConnection();
+                WakeUpWordListener.getPorcupineINSTANCE().delete();
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -1,5 +1,9 @@
 package bot.spaz.commands;
 
+import ai.picovoice.porcupine.Porcupine;
+import ai.picovoice.porcupine.PorcupineException;
+import bot.spaz.listeners.WakeUpWordListener;
+import ignored.PicoToken;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -29,6 +33,8 @@ public class CmdJoin extends ListenerAdapter {
                     return;
                 }
                 userVoiceChannel.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
+                WakeUpWordListener listener = new WakeUpWordListener();
+                listener.Listen();
             } catch (Exception e) {
                 e.printStackTrace();
             }
