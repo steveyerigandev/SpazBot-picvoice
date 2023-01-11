@@ -30,8 +30,5 @@ public class SpazBot extends ListenerAdapter {
                 .addEventListeners(new CmdPlay())
                 .addEventListeners(new CmdSkip())
                 .build();
-
-//        WakeUpWordListener spazBot = new WakeUpWordListener();
-//        spazBot.Listen();
     }
 }

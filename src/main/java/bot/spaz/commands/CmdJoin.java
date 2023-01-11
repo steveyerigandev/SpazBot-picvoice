@@ -4,10 +4,12 @@ import ai.picovoice.porcupine.Porcupine;
 import ai.picovoice.porcupine.PorcupineException;
 import bot.spaz.listeners.WakeUpWordListener;
 import ignored.PicoToken;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Text;
 
 public class CmdJoin extends ListenerAdapter {
 
@@ -18,6 +20,7 @@ public class CmdJoin extends ListenerAdapter {
             return;
         }
 
+        TextChannel textChannel = event.getChannel().asTextChannel();
         VoiceChannel userVoiceChannel;
         String[] message = event.getMessage().getContentRaw().split(" ");
 
@@ -33,8 +36,8 @@ public class CmdJoin extends ListenerAdapter {
                     return;
                 }
                 userVoiceChannel.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
-                WakeUpWordListener listener = new WakeUpWordListener();
-                listener.Listen();
+                WakeUpWordListener spazListener = new WakeUpWordListener();
+                spazListener.Listen(textChannel);
             } catch (Exception e) {
                 e.printStackTrace();
             }
