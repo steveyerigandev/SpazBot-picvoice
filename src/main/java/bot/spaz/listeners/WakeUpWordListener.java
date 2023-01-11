@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.audio.UserAudio;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveHandler {
@@ -32,7 +31,11 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
 
             @Override
             public void handleUserAudio(@NotNull UserAudio userAudio) {
-                userAudioShorts.add(convertToShortArray(userAudio.getAudioData(1)));
+                try {
+                    porcupineINSTANCE.process(convertToShortArray(userAudio.getAudioData(1)));
+                } catch (PorcupineException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             public short[] convertToShortArray(byte[] bytes) {
