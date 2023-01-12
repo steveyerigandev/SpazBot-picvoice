@@ -37,7 +37,7 @@ public class CmdJoin extends ListenerAdapter {
                     return;
                 }
                 userVoiceChannel.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
-                WakeUpWordListener spazListener = new WakeUpWordListener(userVoiceChannel);
+                WakeUpWordListener spazListener = new WakeUpWordListener(userVoiceChannel, textChannel);
                 spazListener.Run();
             } catch (Exception e) {
                 e.printStackTrace();

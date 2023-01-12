@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -43,7 +42,7 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
     }
 
     // Constructor builds the porcupine instance
-    public WakeUpWordListener(VoiceChannel voiceChannel) throws PorcupineException {
+    public WakeUpWordListener(VoiceChannel voiceChannel, TextChannel textChannel) throws PorcupineException {
         this.voiceChannel = voiceChannel;
         porcupineINSTANCE = new Porcupine.Builder()
                 .setAccessKey(PicoToken.getToken())
@@ -51,9 +50,11 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
                         new Porcupine.BuiltInKeyword[]
                                 {
                                         Porcupine.BuiltInKeyword.JARVIS,
-                                        Porcupine.BuiltInKeyword.BUMBLEBEE
+                                        Porcupine.BuiltInKeyword.BUMBLEBEE,
+                                        Porcupine.BuiltInKeyword.COMPUTER
                                 })
                 .build();
+        this.textChannel = textChannel;
     }
 
     // Run ... what I believe should work
@@ -127,7 +128,11 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
         short[] shortBuffer = new short[porcupineINSTANCE.getFrameLength()];
 
         // Calling the AudioInputStream method to read data
-        inputStreamForReading(new AudioInputStream(new ByteArrayInputStream(bytes), AudioReceiveHandler.OUTPUT_FORMAT, bytes.length))
+        inputStreamForReading(
+                new AudioInputStream(
+                        new ByteArrayInputStream(bytes),
+                        AudioReceiveHandler.OUTPUT_FORMAT,
+                        bytes.length))
                 .read(byteBuffer, 0, byteBuffer.length);
 
         ByteBuffer.wrap(byteBuffer).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(shortBuffer);
@@ -136,9 +141,15 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
             int keyword = porcupineINSTANCE.process(shortBuffer);
             if (keyword == 0) {
                 System.out.println("JARVIS");
+                textChannel.sendMessage("You said **JARVIS**").queue();
             }
             if (keyword == 1) {
                 System.out.println("BUMBLEBEE");
+                textChannel.sendMessage("You said **BUMBLEBEE**").queue();
+            }
+            if (keyword == 2) {
+                System.out.println("COMPUTER");
+                textChannel.sendMessage("You said **COMPUTER**").queue();
             }
         } catch (Exception e) {
             System.out.println("Error processing shortBuffer in covertToShortArray");
