@@ -1,5 +1,8 @@
 package bot.spaz.listeners;
 
+import ai.picovoice.cheetah.Cheetah;
+import ai.picovoice.cheetah.CheetahException;
+import ai.picovoice.cheetah.CheetahTranscript;
 import ai.picovoice.porcupine.Porcupine;
 import ai.picovoice.porcupine.PorcupineException;
 import ignored.PicoToken;
@@ -25,10 +28,17 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
     private TextChannel textChannel;
     private final VoiceChannel voiceChannel;
     private static Porcupine porcupineINSTANCE;
+    private static Cheetah cheetahINSTANCE;
+    private String transcript = "";
+    CheetahTranscript transcriptObj;
 
     // Getter for the porcupineINSTANCE
     public static Porcupine getPorcupineINSTANCE() {
         return porcupineINSTANCE;
+    }
+
+    public static Cheetah getCheetahINSTANCE() {
+        return cheetahINSTANCE;
     }
 
     // Getter for the text channel
@@ -42,19 +52,23 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
     }
 
     // Constructor builds the porcupine instance
-    public WakeUpWordListener(VoiceChannel voiceChannel, TextChannel textChannel) throws PorcupineException {
+    public WakeUpWordListener(VoiceChannel voiceChannel, TextChannel textChannel) throws PorcupineException, CheetahException {
         this.voiceChannel = voiceChannel;
+        this.textChannel = textChannel;
+        // Build an instance of Porcupine
         porcupineINSTANCE = new Porcupine.Builder()
                 .setAccessKey(PicoToken.getToken())
                 .setBuiltInKeywords(
                         new Porcupine.BuiltInKeyword[]
                                 {
                                         Porcupine.BuiltInKeyword.JARVIS,
-                                        Porcupine.BuiltInKeyword.BUMBLEBEE,
-                                        Porcupine.BuiltInKeyword.COMPUTER
                                 })
                 .build();
-        this.textChannel = textChannel;
+
+        // Build an instance of Cheetah
+        cheetahINSTANCE = new Cheetah.Builder()
+                .setAccessKey(PicoToken.getToken())
+                .build();
     }
 
     // Run ... what I believe should work
@@ -139,18 +153,17 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
 
         try {
             int keyword = porcupineINSTANCE.process(shortBuffer);
+            String transcript = "";
             if (keyword == 0) {
-                System.out.println("JARVIS");
                 textChannel.sendMessage("You said **JARVIS**").queue();
+                transcriptObj = cheetahINSTANCE.process(shortBuffer);
+                transcript+= transcriptObj.getTranscript();
+                if (transcriptObj.getIsEndpoint()) {
+                    CheetahTranscript finalTranscriptObj = cheetahINSTANCE.flush();
+                    transcript += finalTranscriptObj.getTranscript();
+                }
             }
-            if (keyword == 1) {
-                System.out.println("BUMBLEBEE");
-                textChannel.sendMessage("You said **BUMBLEBEE**").queue();
-            }
-            if (keyword == 2) {
-                System.out.println("COMPUTER");
-                textChannel.sendMessage("You said **COMPUTER**").queue();
-            }
+            textChannel.sendMessage(transcript).queue();
         } catch (Exception e) {
             System.out.println("Error processing shortBuffer in covertToShortArray");
             e.printStackTrace();
