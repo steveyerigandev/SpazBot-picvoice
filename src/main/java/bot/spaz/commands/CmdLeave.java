@@ -28,7 +28,7 @@ public class CmdLeave extends ListenerAdapter {
                 event.getChannel().sendMessage("NOIGHT! NOIGHT!!").queue();
                 userVoiceChannel.getGuild().getAudioManager().closeAudioConnection();
                 WakeUpWordListener.getPorcupineINSTANCE().delete();
-                WakeUpWordListener.getCheetahINSTANCE().delete();
+//                WakeUpWordListener.getCheetahINSTANCE().delete();
             } catch (Exception e) {
                 e.printStackTrace();
             }
