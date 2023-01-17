@@ -37,6 +37,10 @@ public class PlayerManager {
     }
 
     public void loadAndPlay(TextChannel textChannel, String trackURL) {
+        if(trackURL.trim().equals("")){
+            textChannel.sendMessage("Empty Request").queue();
+            return;
+        }
         final GuildMusicManager musicManager = this.getMusicManager(textChannel.getGuild());
         this.audioPlayerManager.loadItemOrdered(musicManager, trackURL, new AudioLoadResultHandler() {
             @Override

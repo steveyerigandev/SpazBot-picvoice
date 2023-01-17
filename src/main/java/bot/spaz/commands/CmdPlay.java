@@ -12,6 +12,9 @@ import java.net.URISyntaxException;
 
 public class CmdPlay extends ListenerAdapter {
 
+    public CmdPlay() {
+    }
+
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
@@ -23,6 +26,8 @@ public class CmdPlay extends ListenerAdapter {
         TextChannel userTextChannel = event.getChannel().asTextChannel();
         String[] message = event.getMessage().getContentRaw().split(" ");
         String link = event.getMessage().getContentRaw().substring(5).trim();
+
+
 
         if (message[0].equalsIgnoreCase("-play")) {
             try {
@@ -52,7 +57,7 @@ public class CmdPlay extends ListenerAdapter {
                 }
                 // Method called to check if user input is a URL or not
                 if (!isURL(link)) {
-                    play(link, userVoiceChannel, userTextChannel);
+                    play(link, userTextChannel);
                 }
                 userVoiceChannel.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
 
@@ -62,7 +67,7 @@ public class CmdPlay extends ListenerAdapter {
         }
     }
 
-    public void play(String link, VoiceChannel voiceChannel, TextChannel textChannel) {
+    public void play(String link, TextChannel textChannel) {
         if (!isURL(link)) {
             link = "ytsearch:" + link + " audio";
         }

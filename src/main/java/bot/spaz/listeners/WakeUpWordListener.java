@@ -5,6 +5,8 @@ import ai.picovoice.cheetah.CheetahException;
 import ai.picovoice.cheetah.CheetahTranscript;
 import ai.picovoice.porcupine.Porcupine;
 import ai.picovoice.porcupine.PorcupineException;
+import bot.spaz.commands.CmdPlay;
+import bot.spaz.lavaplayer.PlayerManager;
 import ignored.PicoToken;
 import net.dv8tion.jda.api.audio.AudioReceiveHandler;
 import net.dv8tion.jda.api.audio.CombinedAudio;
@@ -22,8 +24,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveHandler {
 
@@ -60,12 +60,7 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
         // Builds an instance of Porcupine
         porcupineINSTANCE = new Porcupine.Builder()
                 .setAccessKey(PicoToken.getToken())
-                .setBuiltInKeywords(
-                        new Porcupine.BuiltInKeyword[]
-                                {
-                                        Porcupine.BuiltInKeyword.JARVIS,
-                                        Porcupine.BuiltInKeyword.COMPUTER,
-                                })
+                .setBuiltInKeyword(Porcupine.BuiltInKeyword.COMPUTER)
                 .build();
     }
 
@@ -92,7 +87,7 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
                 public void handleUserAudio(@NotNull UserAudio userAudio) {
                     try {
                         processIncomingUserAudioData(userAudio.getAudioData(1));
-                    } catch (PorcupineException | IOException e) {
+                    } catch (PorcupineException | IOException | CheetahException e) {
                         throw new RuntimeException(e);
                     }
                 }
@@ -131,11 +126,10 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
         return AudioSystem.getAudioInputStream(toMonoLEFormat, resampled16khz);
     }
 
-    public void processIncomingUserAudioData(byte[] bytes) throws PorcupineException, IOException {
+    public void processIncomingUserAudioData(byte[] bytes) throws PorcupineException, IOException, CheetahException {
         if (porcupineINSTANCE == null) {
             return;
         }
-
         byte[] byteBuffer = new byte[porcupineINSTANCE.getFrameLength() * 2];
         short[] shortBuffer = new short[porcupineINSTANCE.getFrameLength()];
 
@@ -149,24 +143,35 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
 
         ByteBuffer.wrap(byteBuffer).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(shortBuffer);
 
-        try {
-            int keyword = porcupineINSTANCE.process(shortBuffer);
-            String transcript = "";
-            if (keyword == 0) {
-                // Builds an instance of Cheetah once trigger word found
-                cheetahINSTANCE = new Cheetah.Builder()
-                        .setAccessKey(PicoToken.getToken())
-                        .build();
-                textChannel.sendMessage("You said **JARVIS**").queue();
-                System.out.println("Jarvis");
+        if (cheetahINSTANCE != null) {
+            transcriptObj = cheetahINSTANCE.process(shortBuffer);
+            transcript += transcriptObj.getTranscript();
+            if (transcriptObj.getIsEndpoint()) {
+                CheetahTranscript finalTranscriptObj = cheetahINSTANCE.flush();
+                transcript += finalTranscriptObj.getTranscript();
+                System.out.println(transcript);
+                CmdPlay cmdPlay = new CmdPlay();
+                cmdPlay.play(transcript, textChannel);
+                PlayerManager.getINSTANCE().loadAndPlay(textChannel, transcript);
+                transcript = "";
+                cheetahINSTANCE = null;
             }
-            if (keyword == 1) {
-                textChannel.sendMessage("You said **COMPUTER**").queue();
-            }
+        } else {
+            try {
+                int keyword = porcupineINSTANCE.process(shortBuffer);
+                if (keyword == 0) {
+                    System.out.println("COMPUTER");
+                    // Builds an instance of Cheetah once trigger word found
+                    cheetahINSTANCE = new Cheetah.Builder()
+                            .setAccessKey(PicoToken.getToken())
+                            .setEndpointDuration(0.5f)
+                            .build();
+                }
 //            textChannel.sendMessage(transcript).queue();
-        } catch (Exception e) {
-            System.out.println("Error processing shortBuffer in covertToShortArray");
+            } catch (Exception e) {
+                System.out.println("Error processing shortBuffer in covertToShortArray");
 //            e.printStackTrace();
+            }
         }
     }
 }
