@@ -22,24 +22,26 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveHandler {
 
     private TextChannel textChannel;
     private final VoiceChannel voiceChannel;
     private static Porcupine porcupineINSTANCE;
-//    private static Cheetah cheetahINSTANCE;
-//    private String transcript = "";
-//    CheetahTranscript transcriptObj;
+    private static Cheetah cheetahINSTANCE;
+    private String transcript = "";
+    CheetahTranscript transcriptObj;
 
     // Getter for the porcupineINSTANCE
     public static Porcupine getPorcupineINSTANCE() {
         return porcupineINSTANCE;
     }
 
-//    public static Cheetah getCheetahINSTANCE() {
-//        return cheetahINSTANCE;
-//    }
+    public static Cheetah getCheetahINSTANCE() {
+        return cheetahINSTANCE;
+    }
 
     // Getter for the text channel
     public TextChannel getTextChannel() {
@@ -65,11 +67,6 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
                                         Porcupine.BuiltInKeyword.COMPUTER,
                                 })
                 .build();
-
-        // Builds an instance of Cheetah
-//        cheetahINSTANCE = new Cheetah.Builder()
-//                .setAccessKey(PicoToken.getToken())
-//                .build();
     }
 
     // Run ... what I believe should work
@@ -156,13 +153,12 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
             int keyword = porcupineINSTANCE.process(shortBuffer);
             String transcript = "";
             if (keyword == 0) {
+                // Builds an instance of Cheetah once trigger word found
+                cheetahINSTANCE = new Cheetah.Builder()
+                        .setAccessKey(PicoToken.getToken())
+                        .build();
                 textChannel.sendMessage("You said **JARVIS**").queue();
-//                transcriptObj = cheetahINSTANCE.process(shortBuffer);
-//                transcript+= transcriptObj.getTranscript();
-//                if (transcriptObj.getIsEndpoint()) {
-//                    CheetahTranscript finalTranscriptObj = cheetahINSTANCE.flush();
-//                    transcript += finalTranscriptObj.getTranscript();
-//                }
+                System.out.println("Jarvis");
             }
             if (keyword == 1) {
                 textChannel.sendMessage("You said **COMPUTER**").queue();
