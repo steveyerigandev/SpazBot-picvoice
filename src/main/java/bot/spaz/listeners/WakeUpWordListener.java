@@ -6,9 +6,11 @@ import ai.picovoice.cheetah.CheetahTranscript;
 import ai.picovoice.porcupine.Porcupine;
 import ai.picovoice.porcupine.PorcupineException;
 import bot.spaz.commands.CmdPlay;
+import bot.spaz.commands.CmdVoiceCommands;
 import bot.spaz.lavaplayer.PlayerManager;
 import ignored.PicoToken;
 import net.dv8tion.jda.api.audio.AudioReceiveHandler;
+import net.dv8tion.jda.api.audio.AudioSendHandler;
 import net.dv8tion.jda.api.audio.CombinedAudio;
 import net.dv8tion.jda.api.audio.UserAudio;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -16,6 +18,7 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -155,16 +158,19 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
                 PlayerManager.getINSTANCE().loadAndPlay(textChannel, transcript);
                 transcript = "";
                 cheetahINSTANCE = null;
+                System.out.println("Done.");
+                textChannel.sendMessage("Done.").queue();
             }
         } else {
             try {
                 int keyword = porcupineINSTANCE.process(shortBuffer);
                 if (keyword == 0) {
-                    System.out.println("COMPUTER");
+                    System.out.println("Listening...");
+                    textChannel.sendMessage("Listening...").queue();
                     // Builds an instance of Cheetah once trigger word found
                     cheetahINSTANCE = new Cheetah.Builder()
                             .setAccessKey(PicoToken.getToken())
-                            .setEndpointDuration(0.5f)
+                            .setEndpointDuration(1f)
                             .build();
                 }
 //            textChannel.sendMessage(transcript).queue();

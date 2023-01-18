@@ -28,7 +28,6 @@ public class CmdSkip extends ListenerAdapter {
                     event.getChannel().sendMessage("I'm in a different channel BRUH.").queue();
                     return;
                 }
-
                 PlayerManager.getINSTANCE().getMusicManager(event.getGuild()).scheduler.nextTrack();
 
             } catch (Exception e) {
