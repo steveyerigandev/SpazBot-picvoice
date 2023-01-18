@@ -6,6 +6,7 @@ import ai.picovoice.cheetah.CheetahTranscript;
 import ai.picovoice.porcupine.Porcupine;
 import ai.picovoice.porcupine.PorcupineException;
 import bot.spaz.commands.CmdPlay;
+import bot.spaz.commands.CmdSkip;
 import bot.spaz.commands.CmdVoiceCommands;
 import bot.spaz.lavaplayer.PlayerManager;
 import ignored.PicoToken;
@@ -152,10 +153,15 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
             if (transcriptObj.getIsEndpoint()) {
                 CheetahTranscript finalTranscriptObj = cheetahINSTANCE.flush();
                 transcript += finalTranscriptObj.getTranscript();
+                textChannel.sendMessage("Transcription: " + transcript).queue();
                 System.out.println(transcript);
-                CmdPlay cmdPlay = new CmdPlay();
-                cmdPlay.play(transcript, textChannel);
-                PlayerManager.getINSTANCE().loadAndPlay(textChannel, transcript);
+                if (transcript.charAt(0) == 'p' || transcript.charAt(0) == 'P') {
+                    CmdPlay cmdPlay = new CmdPlay();
+                    cmdPlay.play(transcript, textChannel);
+                }
+                if(transcript.substring(0, 4).equalsIgnoreCase("skip") || transcript.substring(0, 4).equalsIgnoreCase("skep")){
+                    PlayerManager.getINSTANCE().getMusicManager(textChannel.getGuild()).scheduler.nextTrack();
+                }
                 transcript = "";
                 cheetahINSTANCE = null;
                 System.out.println("Done.");
