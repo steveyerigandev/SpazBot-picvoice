@@ -6,8 +6,6 @@ import ai.picovoice.cheetah.CheetahTranscript;
 import ai.picovoice.porcupine.Porcupine;
 import ai.picovoice.porcupine.PorcupineException;
 import bot.spaz.commands.CmdPlay;
-import bot.spaz.commands.CmdSkip;
-import bot.spaz.commands.CmdVoiceCommands;
 import bot.spaz.lavaplayer.PlayerManager;
 import ignored.PicoToken;
 import net.dv8tion.jda.api.audio.AudioReceiveHandler;
@@ -37,6 +35,20 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
     private static Cheetah cheetahINSTANCE;
     private String transcript = "";
     CheetahTranscript transcriptObj;
+    AudioFormat INPUT_FORMAT = new AudioFormat(48000f, 16, 2, true, true);
+
+    AudioSendHandler audioSendHandler = new AudioSendHandler() {
+        @Override
+        public boolean canProvide() {
+            return false;
+        }
+
+        @Nullable
+        @Override
+        public ByteBuffer provide20MsAudio() {
+            return null;
+        }
+    };
 
     // Getter for the porcupineINSTANCE
     public static Porcupine getPorcupineINSTANCE() {
@@ -178,6 +190,9 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
                             .setAccessKey(PicoToken.getToken())
                             .setEndpointDuration(1f)
                             .build();
+                    // This section for experimenting with sending audio clip to verify bot is listening
+
+                    // End of section
                 }
 //            textChannel.sendMessage(transcript).queue();
             } catch (Exception e) {
