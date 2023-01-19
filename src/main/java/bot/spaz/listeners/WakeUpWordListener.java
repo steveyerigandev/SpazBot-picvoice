@@ -9,7 +9,6 @@ import bot.spaz.commands.CmdPlay;
 import bot.spaz.lavaplayer.PlayerManager;
 import ignored.PicoToken;
 import net.dv8tion.jda.api.audio.AudioReceiveHandler;
-import net.dv8tion.jda.api.audio.AudioSendHandler;
 import net.dv8tion.jda.api.audio.CombinedAudio;
 import net.dv8tion.jda.api.audio.UserAudio;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -17,8 +16,6 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -62,7 +59,7 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
         // Builds an instance of Porcupine
         porcupineINSTANCE = new Porcupine.Builder()
                 .setAccessKey(PicoToken.getToken())
-                .setBuiltInKeyword(Porcupine.BuiltInKeyword.COMPUTER)
+                .setBuiltInKeyword(Porcupine.BuiltInKeyword.BLUEBERRY)
                 .build();
     }
 
@@ -157,7 +154,7 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
                     CmdPlay cmdPlay = new CmdPlay();
                     cmdPlay.play(transcript, textChannel);
                 }
-                if(transcript.substring(0, 4).equalsIgnoreCase("skip") || transcript.substring(0, 4).equalsIgnoreCase("skep")){
+                if(transcript.substring(0, 4).equalsIgnoreCase("next") || transcript.substring(0, 4).equalsIgnoreCase("nest")){
                     PlayerManager.getINSTANCE().getMusicManager(textChannel.getGuild()).scheduler.nextTrack();
                 }
                 transcript = "";
