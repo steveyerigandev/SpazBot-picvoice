@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -154,7 +155,7 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
                     CmdPlay cmdPlay = new CmdPlay();
                     cmdPlay.play(transcript, textChannel);
                 }
-                if(transcript.substring(0, 4).equalsIgnoreCase("next") || transcript.substring(0, 4).equalsIgnoreCase("nest")){
+                if (transcript.substring(0, 4).equalsIgnoreCase("next") || transcript.substring(0, 4).equalsIgnoreCase("skip") || transcript.substring(0, 4).equalsIgnoreCase("skep")) {
                     PlayerManager.getINSTANCE().getMusicManager(textChannel.getGuild()).scheduler.nextTrack();
                 }
                 transcript = "";
