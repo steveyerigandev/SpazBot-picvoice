@@ -35,20 +35,6 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
     private static Cheetah cheetahINSTANCE;
     private String transcript = "";
     CheetahTranscript transcriptObj;
-    AudioFormat INPUT_FORMAT = new AudioFormat(48000f, 16, 2, true, true);
-
-    AudioSendHandler audioSendHandler = new AudioSendHandler() {
-        @Override
-        public boolean canProvide() {
-            return false;
-        }
-
-        @Nullable
-        @Override
-        public ByteBuffer provide20MsAudio() {
-            return null;
-        }
-    };
 
     // Getter for the porcupineINSTANCE
     public static Porcupine getPorcupineINSTANCE() {
@@ -185,7 +171,7 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
                 if (keyword == 0) {
                     System.out.println("Listening...");
                     textChannel.sendMessage("Listening...").queue();
-                    // Builds an instance of Cheetah once trigger word found
+                    // Builds an instance of Cheetah once a 'wake up' word is detected
                     cheetahINSTANCE = new Cheetah.Builder()
                             .setAccessKey(PicoToken.getToken())
                             .setEndpointDuration(1f)
