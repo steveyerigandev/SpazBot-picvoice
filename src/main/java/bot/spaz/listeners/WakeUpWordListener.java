@@ -151,10 +151,13 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
                 transcript += finalTranscriptObj.getTranscript();
                 textChannel.sendMessage("Transcription: " + transcript).queue();
                 System.out.println(transcript);
+                // As long as the first transcribed word starts with the letter P it will
+                // attempt to use the remaining strings to play a song
                 if (transcript.charAt(0) == 'p' || transcript.charAt(0) == 'P') {
                     CmdPlay cmdPlay = new CmdPlay();
                     cmdPlay.play(transcript, textChannel);
                 }
+                // when it detects next, skip or skep, it skips to the next song in the queue
                 if (transcript.substring(0, 4).equalsIgnoreCase("next") || transcript.substring(0, 4).equalsIgnoreCase("skip") || transcript.substring(0, 4).equalsIgnoreCase("skep")) {
                     PlayerManager.getINSTANCE().getMusicManager(textChannel.getGuild()).scheduler.nextTrack();
                 }

@@ -9,7 +9,7 @@ public class CmdVoiceCommands {
     public CmdVoiceCommands() {
     }
 
-    public void transcriptParse(TextChannel textChannel, String transcript, VoiceChannel voiceChannel) {
+    public static void transcriptParse(TextChannel textChannel, String transcript, VoiceChannel voiceChannel) {
         if (transcript.length() < 4) {
             textChannel.sendMessage("Empty request").queue();
             return;
