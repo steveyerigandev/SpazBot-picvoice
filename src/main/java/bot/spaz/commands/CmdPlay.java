@@ -52,7 +52,7 @@ public class CmdPlay extends ListenerAdapter {
                 }
                 // Accounts for '-play' with empty request after
                 if (link.equals("")) {
-                    event.getChannel().sendMessage("Homie you stoooopid or sumtin'? You sent an empty request. Use '**-play [artist name] [song name]**'").queue();
+                    event.getChannel().sendMessage("Homie you stoooopid or sumtin'? You sent an empty request. Use '**-play [artist name] [song name]**' but without the **['s**").queue();
                     return;
                 }
                 // Method called to check if user input is a URL or not

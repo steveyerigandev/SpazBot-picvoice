@@ -143,6 +143,7 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
 
         ByteBuffer.wrap(byteBuffer).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(shortBuffer);
 
+        // Does not attempt to transcribe audio while Cheetah is null
         if (cheetahINSTANCE != null) {
             transcriptObj = cheetahINSTANCE.process(shortBuffer);
             transcript += transcriptObj.getTranscript();
@@ -162,6 +163,7 @@ public class WakeUpWordListener extends ListenerAdapter implements AudioReceiveH
                     PlayerManager.getINSTANCE().getMusicManager(textChannel.getGuild()).scheduler.nextTrack();
                 }
                 transcript = "";
+                // Set cheetah to null to stop transcribing audio
                 cheetahINSTANCE = null;
                 System.out.println("Done.");
                 textChannel.sendMessage("Done.").queue();

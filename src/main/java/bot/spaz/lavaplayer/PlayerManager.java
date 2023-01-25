@@ -19,6 +19,7 @@ public class PlayerManager {
     private static PlayerManager INSTANCE;
     private final Map<Long, GuildMusicManager> musicManagers;
     private final AudioPlayerManager audioPlayerManager;
+    private static Map<Long, String> trackList;
 
     public PlayerManager() {
         this.musicManagers = new HashMap<>();
@@ -50,7 +51,6 @@ public class PlayerManager {
                         + audioTrack.getInfo().title + "`** by **`"
                         + audioTrack.getInfo().author + "`**";
                 textChannel.sendMessage(message).queue();
-
             }
 
             @Override
